@@ -1,0 +1,155 @@
+.word-list {
+  td, th {
+    font-size: 24px;
+    padding: 4px 8px;
+  }
+  th {
+    text-align: left;
+    background-color: #d8dee9;
+  }
+  td {
+    padding: 4px 8px;
+  }
+  tr:nth-child(even) td {
+    background-color: #d8dee9;
+  }
+}
+
+.app-container {
+  padding: 20px;
+}
+
+.words-section {
+  margin-bottom: 30px;
+}
+
+.crossword-container {
+  margin-top: 30px;
+}
+
+.placement-controls {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.placement-controls label {
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.placement-controls input[type="radio"] {
+  margin-right: 5px;
+}
+
+.crossword-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 35px);
+  grid-template-rows: repeat(10, 35px);
+  gap: 1px;
+  border: 2px solid #333;
+  background-color: #333;
+  margin-top: 10px;
+}
+
+.grid-cell {
+  width: 35px;
+  height: 35px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+}
+
+.grid-cell:hover {
+  background-color: #e0e0e0;
+}
+
+.grid-cell.start-cell {
+  background-color: #e3f2fd;
+  border: 2px solid #2196f3;
+}
+
+.grid-cell.placed-horizontal {
+  background-color: #e8f5e8;
+}
+
+.grid-cell.placed-vertical {
+  background-color: #fff3e0;
+}
+
+.grid-cell.conflict {
+  background-color: #ffebee;
+  border: 1px solid #f44336;
+}
+
+.word-list-container {
+  margin-bottom: 20px;
+}
+
+.word-list {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.word-list th,
+.word-list td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.word-list th {
+  background-color: #f2f2f2;
+}
+
+
+.add-form-container {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+.add-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.add-form input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.word-placement-info {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #e8f5e8;
+  border-radius: 5px;
+  border-left: 4px solid #4CAF50;
+} 
+
+/* Добавляем в конец файла */
+.word-list tbody tr {
+  cursor: pointer;
+}
+
+.word-list tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.word-list tbody tr.selected {
+  background-color: #e3f2fd;
+  border: 2px solid #2196f3;
+}
+
+.word-list tbody tr.selected td {
+  font-weight: bold;
+}

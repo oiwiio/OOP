@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" type="text/css" href="/src/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crossword Maker</title>
+</head>
+
+<template id="crossword-grid">
+  <div class="crossword-container">
+    <h3>Сетка кроссворда 10×10</h3>
+    <div class="placement-controls">
+      <label>
+        <input type="radio" name="direction" value="horizontal" checked>
+        Горизонтально
+      </label>
+      <label>
+        <input type="radio" name="direction" value="vertical">
+        Вертикально
+      </label>
+      <button id="clear-placement">Отменить размещение</button>
+    </div>
+    <div class="crossword-grid" id="crossword-grid-container">
+      
+    </div>
+  </div>
+</template>
+
+<template id="word-list">
+  <table class="word-list">
+    <thead>
+      <tr>
+        <th>Слово</th>
+        <th>Описание</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr></tr>
+    </tbody>
+  </table>
+</template>
+
+<template id="table-row">
+  <tr>
+    <td>%word</td>
+    <td>%description</td>
+    <td><button class="delete-btn">×</button></td>
+  </tr>
+</template> 
+
+<template id="add-form-template">
+    <div class="add-form">
+        <input type="text" id="word-input" placeholder="Введите слово">
+        <input type="text" id="description-input" placeholder="Введите описание">
+        <button id="add-btn">Добавить</button>
+    </div>
+</template>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
