@@ -52,13 +52,12 @@ function setupEventListeners() {
       
       if (selectedWord && selectedWord.word === wordText) {
         selectedWord = null;
-      }
-      
+      } 
+
       updateUI();
     });
-  });
+  }); 
 
-  
   const wordRows = document.querySelectorAll('.word-list tbody tr');
   wordRows.forEach(row => {
     row.addEventListener('click', function() {

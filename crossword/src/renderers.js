@@ -14,7 +14,8 @@ export function renderWordList(wordList) {
       .replace('%word', word.word)
       .replace('%description', word.description);
       
-    tbody.appendChild(row);
+    tbody.appendChild(row); 
+
   });
   
   return clone;
