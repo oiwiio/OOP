@@ -55,30 +55,7 @@ export class CrosswordGrid {
     }
 
     handleCellClick(row, col) {
-        console.log(`Клик по клетке: (${row}, ${col}), выбрано слово:`, this.selectedWord);
-        
-        if (!this.selectedWord) {
-            console.log('Слово не выбрано для размещения');
-            return;
-        }
-
-        const word = this.selectedWord.word;
-        console.log(`Пытаемся разместить слово "${word}" в (${row},${col}) направление: ${this.direction}`);
-
-        const canPlace = this.canPlaceWord(word, row, col, this.direction);
-
-        if (canPlace) {
-            this.placeWord(word, row, col, this.direction);
-            this.selectedWord = null;
-            this.updateGridDisplay();
-            
-            const selectedRows = document.querySelectorAll('.word-list tr.selected');
-            selectedRows.forEach(row => row.classList.remove('selected'));
-            
-            console.log('Слово успешно размещено!');
-        } else {
-            alert('Нельзя разместить слово здесь! Проверьте границы сетки и пересечения.');
-        }
+        console.log(`Клик по клетке: (${row}, ${col})`);
     }
 
     canPlaceWord(word, row, col, direction) {
@@ -138,20 +115,11 @@ export class CrosswordGrid {
         console.log(`Слово "${word}" размещено в (${row},${col}) направление: ${direction}`);
     }
 
-    clearPlacement() {
-        this.selectedWord = null;
-        this.selectedCell = null;
-        
-        const selectedRows = document.querySelectorAll('.word-list tr.selected');
-        selectedRows.forEach(row => row.classList.remove('selected'));
-        
+    clearGrid() {
+        this.grid = this.createEmptyGrid();
+        this.placedWords = [];
         this.updateGridDisplay();
-        console.log('Размещение отменено');
-    }
-
-    setWordForPlacement(wordObj) {
-        this.selectedWord = wordObj;
-        console.log(`Выбрано слово для размещения: "${wordObj.word}"`);
+        console.log('Сетка очищена');
     }
 
     updateGridDisplay() {
@@ -192,4 +160,23 @@ export class CrosswordGrid {
     getPlacedWords() {
         return this.placedWords;
     }
-}
+
+    addWordDirectly(word, direction) {
+        console.log(`Попытка добавить слово "${word}" направление: ${direction}`);
+        
+        
+        for (let row = 0; row < this.rows; row++) {
+            for (let col = 0; col < this.cols; col++) {
+                if (this.canPlaceWord(word, row, col, direction)) {
+                    this.placeWord(word, row, col, direction);
+                    console.log(`Слово "${word}" успешно добавлено в позицию (${row}, ${col})`);
+                    return true;
+                }
+            }
+        }
+        
+        alert(`Не удалось найти подходящее место для слова "${word}" в направлении ${direction === 'horizontal' ? 'горизонтально' : 'вертикально'}`);
+        return false;
+    }
+} 
+

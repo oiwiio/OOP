@@ -29,18 +29,71 @@
 
 .placement-controls {
   margin-bottom: 15px;
-  padding: 10px;
+  padding: 15px;
   background-color: #f5f5f5;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.placement-controls label {
-  margin-right: 20px;
+.word-input-section {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.word-input-section input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  max-width: 200px;
+}
+
+.word-input-section button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.placement-controls input[type="radio"] {
-  margin-right: 5px;
+.word-input-section button:hover {
+  background-color: #45a049;
+}
+
+.direction-section {
+  display: flex;
+  gap: 15px;
+}
+
+.direction-section label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.direction-section input[type="radio"] {
+  margin: 0;
+}
+
+#clear-placement {
+  padding: 8px 16px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+#clear-placement:hover {
+  background-color: #da190b;
 }
 
 .crossword-grid {
