@@ -13,19 +13,25 @@
   <div class="crossword-container">
     <h3>Сетка кроссворда 10×10</h3>
     <div class="placement-controls">
-      <div class="word-input-section">
-        <input type="text" id="word-input-field" placeholder="Введите слово" maxlength="10">
-        <button id="add-word-btn">Добавить</button>
-      </div>
-      <div class="direction-section">
-        <label>
-          <input type="radio" name="direction" value="horizontal" checked>
-          Горизонтально
-        </label>
-        <label>
-          <input type="radio" name="direction" value="vertical">
-          Вертикально
-        </label>
+      <p class="placement-hint">Нажмите на клетку, чтобы добавить или изменить слово</p>
+      <div class="cell-input-panel hidden" id="cell-input-panel">
+        <div class="cell-input-header">
+          <span id="selected-cell-label">Клетка не выбрана</span>
+        </div>
+        <input type="text" id="cell-word-input" placeholder="Введите слово" maxlength="10">
+        <input type="text" id="cell-description-input" placeholder="Введите описание">
+        <div class="direction-section">
+          <label>
+            <input type="radio" name="cell-direction" value="horizontal" checked>
+            Горизонтально
+          </label>
+          <label>
+            <input type="radio" name="cell-direction" value="vertical">
+            Вертикально
+          </label>
+        </div>
+        <button id="cell-place-word-btn">Добавить</button>
+        <button id="cell-cancel-btn">Отмена</button>
       </div>
       <button id="clear-placement">Очистить сетку</button>
     </div>

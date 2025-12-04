@@ -10,6 +10,12 @@ export class WordList {
         });
     }
 
+    updateWord(index, word, description) {
+        if (this.words[index]) {
+            this.words[index] = { word, description };
+        }
+    }
+
     deleteWord(wordToDelete) {
         this.words = this.words.filter(item => item.word !== wordToDelete);
     }

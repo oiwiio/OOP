@@ -21,6 +21,9 @@ const wordsSection = app.querySelector('#words-section');
 const wl = new WordList();
 const crossword = new CrosswordGrid();
 
+// индекс слова в таблице, которое сейчас редактируем (null — режим добавления)
+let editingWordIndex = null;
+
 wl.addWord("повар", "такая профессия");
 wl.addWord("чай", "вкусный, делает меня человеком");
 wl.addWord("яблоки", "с ананасами");
@@ -36,6 +39,7 @@ function updateUI() {
   
   crosswordSection.innerHTML = '';
   crosswordSection.appendChild(crossword.renderGrid());
+  crossword.updateGridDisplay();
   
   setupEventListeners();
 }
@@ -48,6 +52,7 @@ function setupEventListeners() {
       const row = this.closest('tr');
       const wordText = row.querySelector('td:first-child').textContent;
       wl.deleteWord(wordText);
+      editingWordIndex = null;
       updateUI();
     });
   }); 
@@ -63,10 +68,16 @@ function setupEventListeners() {
       const description = descriptionInput.value.trim();
 
       if (word && description){
-        wl.addWord(word, description);
+        if (editingWordIndex !== null) {
+          wl.updateWord(editingWordIndex, word, description);
+          editingWordIndex = null;
+        } else {
+          wl.addWord(word, description);
+        }
         updateUI();
         wordInput.value = '';
         descriptionInput.value = '';
+        addBtn.textContent = 'Добавить';
       }
     });
 
@@ -82,43 +93,30 @@ function setupEventListeners() {
         addBtn.click();
       }
     });
-  }
 
-  // Обработчики для добавления слов в сетку
-  const addWordBtn = document.getElementById('add-word-btn');
-  const wordInputField = document.getElementById('word-input-field');
-  const clearBtn = document.getElementById('clear-placement');
+    // выбор слова в таблице для редактирования в этой же форме
+    const rows = document.querySelectorAll('.word-list tbody tr');
+    const currentWords = wl.getWords();
+    rows.forEach((row, index) => {
+      row.addEventListener('click', () => {
+        const wordText = row.querySelector('td:nth-child(1)').textContent;
+        const descriptionText = row.querySelector('td:nth-child(2)').textContent;
 
-  if (addWordBtn && wordInputField) {
-    function addWordToGrid() {
-      const word = wordInputField.value.trim().toUpperCase();
-      const direction = document.querySelector('input[name="direction"]:checked').value;
-      
-      if (word) {
-        const success = crossword.addWordDirectly(word, direction);
-        if (success) {
-          wordInputField.value = '';
-          updateUI();
-        }
-      } else {
-        alert('Пожалуйста, введите слово для добавления в сетку');
-      }
-    }
+        // находим индекс слова в списке (на случай, если порядок изменится)
+        const idx = currentWords.findIndex(
+          w => w.word === wordText && w.description === descriptionText
+        );
 
-    addWordBtn.addEventListener('click', addWordToGrid);
-    
-    wordInputField.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        addWordToGrid();
-      }
+        editingWordIndex = idx !== -1 ? idx : index;
+
+        wordInput.value = wordText;
+        descriptionInput.value = descriptionText;
+        addBtn.textContent = 'Обновить';
+      });
     });
   }
 
-  if (clearBtn) {
-    clearBtn.addEventListener('click', function() {
-      crossword.clearGrid();
-    });
-  }
+  // Управление сеткой теперь происходит при клике по клеткам, обработчики добавлены внутри CrosswordGrid
 }
 
 
