@@ -15,6 +15,51 @@
   padding: 20px;
 }
 
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(180px 180px at 50% 32%, rgba(255, 255, 200, 0.32), transparent 60%),
+    radial-gradient(90px 90px at 52% 32%, rgba(255, 255, 220, 0.6), transparent 65%),
+    radial-gradient(40px 40px at 52% 32%, rgba(255, 255, 230, 0.9), transparent 70%),
+    linear-gradient(180deg, #0b1024 0%, #0f1a36 55%, #0a0f22 100%);
+  filter: saturate(0.9);
+}
+
+.page-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(80% 50% at 60% 40%, rgba(25, 35, 70, 0.5), transparent 70%),
+    radial-gradient(70% 45% at 35% 30%, rgba(10, 15, 35, 0.55), transparent 75%),
+    linear-gradient(0deg, rgba(5, 8, 20, 0.35), rgba(5, 8, 20, 0.35));
+  pointer-events: none;
+  z-index: -1;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #e7ecff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.app-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.glass {
+  background: rgba(10, 15, 30, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+}
+
 .words-section {
   margin-bottom: 30px;
 }
@@ -26,7 +71,9 @@
 .placement-controls {
   margin-bottom: 15px;
   padding: 15px;
-  border: 1px solid #000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 15, 30, 0.45);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -42,7 +89,9 @@
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  border: 1px solid #000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 18, 35, 0.55);
+  border-radius: 10px;
 }
 
 .cell-input-panel.hidden {
@@ -58,8 +107,10 @@
 
 .cell-input-panel input {
   padding: 8px 12px;
-  border: 1px solid #000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e7ecff;
 }
 
 .direction-section {
@@ -82,10 +133,12 @@
 #cell-cancel-btn,
 #clear-placement {
   padding: 8px 16px;
-  border: 1px solid #000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
   font-size: 16px;
-  background: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e7ecff;
+  border-radius: 8px;
 }
 
 .crossword-grid {
@@ -106,12 +159,14 @@
   justify-content: center;
   font-weight: bold;
   cursor: pointer;
-  border: 1px solid #000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e7ecff;
 }
 
 .grid-cell.selected-cell {
-  outline: 2px solid #000;
+  outline: 2px solid #d9e4ff;
 }
 
 .word-list-container {
@@ -126,9 +181,11 @@
 
 .word-list th,
 .word-list td {
-  border: 1px solid #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 8px;
   text-align: left;
+  color: #e7ecff;
+  background: rgba(12, 18, 35, 0.45);
 }
 
 .add-form-container {

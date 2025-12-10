@@ -21,7 +21,6 @@ const wordsSection = app.querySelector('#words-section');
 const wl = new WordList();
 const crossword = new CrosswordGrid();
 
-// индекс слова в таблице, которое сейчас редактируем (null — режим добавления)
 let editingWordIndex = null;
 
 wl.addWord("повар", "такая профессия");

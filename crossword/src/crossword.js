@@ -6,15 +6,13 @@ export class CrosswordGrid {
         this.placedWords = [];
         this.direction = 'horizontal';
         this.activeCell = null;
+        this.isEditMode = false;
+        this.wordBeingEdited = null;
         this.inputPanel = null;
         this.wordInputField = null;
-        this.descriptionInputField = null;
         this.directionRadios = [];
         this.selectedCellLabel = null;
         this.panelActionBtn = null;
-
-        // выбор слова сейчас происходит из таблицы,
-        // поэтому редактирование слова в сетке по клику отключено
         this.highlightedCells = [];
     }
 
@@ -52,7 +50,6 @@ export class CrosswordGrid {
     setupPlacementControls(container) {
         this.inputPanel = container.querySelector('#cell-input-panel');
         this.wordInputField = container.querySelector('#cell-word-input');
-        this.descriptionInputField = container.querySelector('#cell-description-input');
         this.directionRadios = container.querySelectorAll('input[name="cell-direction"]');
         this.selectedCellLabel = container.querySelector('#selected-cell-label');
         this.panelActionBtn = container.querySelector('#cell-place-word-btn');
@@ -62,21 +59,13 @@ export class CrosswordGrid {
                 this.direction = radio.value;
             }
             radio.addEventListener('change', (e) => {
-                this.direction = e.target.value;
+                this.setDirection(e.target.value);
                 console.log(`Направление изменено на: ${this.direction}`);
             });
         });
 
         if (this.wordInputField) {
             this.wordInputField.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    this.submitWordFromPanel();
-                }
-            });
-        }
-
-        if (this.descriptionInputField) {
-            this.descriptionInputField.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     this.submitWordFromPanel();
                 }
@@ -103,6 +92,16 @@ export class CrosswordGrid {
 
     handleCellClick(row, col) {
         console.log(`Клик по клетке: (${row}, ${col})`);
+
+        // если кликнули по уже размещенному слову — сразу переходим в режим редактирования
+        const existingWord = this.getWordAtCell(row, col, this.direction);
+        if (existingWord) {
+            this.startEditingWord(existingWord);
+            return;
+        }
+
+        // если слова нет — обычный выбор клетки для нового слова
+        this.exitEditMode();
         this.activeCell = { row, col };
         this.showInputPanel(row, col);
         this.highlightSelectedCell(row, col);
@@ -239,6 +238,7 @@ export class CrosswordGrid {
     }
 
     clearSelection() {
+        this.exitEditMode();
         this.activeCell = null;
         this.clearHighlight();
         this.hideInputPanel();
@@ -286,17 +286,13 @@ export class CrosswordGrid {
             return;
         }
 
-        const word = this.wordInputField.value.trim().toUpperCase();
-        const description = this.descriptionInputField ? this.descriptionInputField.value.trim() : '';
+        const word = this.wordInputField.value.trim();
+        // описания в панели больше нет; при редактировании сохраняем старое описание, если оно было
+        const description = (this.isEditMode && this.wordBeingEdited) ? (this.wordBeingEdited.description || '') : '';
         if (!word) {
             alert('Введите слово для размещения');
             return;
         }
-        if (!description) {
-            alert('Введите описание для слова');
-            return;
-        }
-
         if (this.isEditMode && this.wordBeingEdited) {
             this.updateExistingWord(word, description);
             return;
@@ -320,18 +316,9 @@ export class CrosswordGrid {
         this.clearSelection();
     }
 
-    // === вспомогательные методы для работы с выбором из таблицы ===
-
-    /**
-     * Вызывается снаружи при клике по слову в таблице.
-     * Подставляет слово и описание в панель и меняет текст кнопки.
-     */
     selectWordFromList(word, description) {
         if (this.wordInputField) {
-            this.wordInputField.value = (word || '').toUpperCase();
-        }
-        if (this.descriptionInputField) {
-            this.descriptionInputField.value = description || '';
+            this.wordInputField.value = word || '';
         }
         if (this.panelActionBtn) {
             this.panelActionBtn.textContent = 'Обновить';
@@ -341,9 +328,6 @@ export class CrosswordGrid {
     clearInputs() {
         if (this.wordInputField) {
             this.wordInputField.value = '';
-        }
-        if (this.descriptionInputField) {
-            this.descriptionInputField.value = '';
         }
         if (this.panelActionBtn) {
             this.panelActionBtn.textContent = 'Добавить';
@@ -362,6 +346,100 @@ export class CrosswordGrid {
                 }
             }
         });
+    }
+
+   
+
+    setDirection(direction, syncRadios = false) {
+        this.direction = direction;
+        if (syncRadios && this.directionRadios) {
+            this.directionRadios.forEach(radio => {
+                radio.checked = radio.value === direction;
+            });
+        }
+    }
+
+    isCellPartOfWord(row, col, wordObj) {
+        const { word, direction, row: startRow, col: startCol } = wordObj;
+        if (direction === 'horizontal') {
+            return row === startRow && col >= startCol && col < startCol + word.length;
+        }
+        return col === startCol && row >= startRow && row < startRow + word.length;
+    }
+
+    getCellsForWord(wordObj) {
+        const cells = [];
+        const { word, row, col, direction } = wordObj;
+        for (let i = 0; i < word.length; i++) {
+            if (direction === 'horizontal') {
+                cells.push({ row, col: col + i });
+            } else {
+                cells.push({ row: row + i, col });
+            }
+        }
+        return cells;
+    }
+
+    getWordAtCell(row, col, preferredDirection = null) {
+        
+        if (preferredDirection) {
+            const match = this.placedWords.find(wordObj =>
+                wordObj.direction === preferredDirection && this.isCellPartOfWord(row, col, wordObj)
+            );
+            if (match) {
+                return match;
+            }
+        }
+       
+        return this.placedWords.find(wordObj => this.isCellPartOfWord(row, col, wordObj)) || null;
+    }
+
+    startEditingWord(wordObj) {
+        this.isEditMode = true;
+        this.wordBeingEdited = wordObj;
+        this.activeCell = { row: wordObj.row, col: wordObj.col };
+
+        if (this.wordInputField) {
+            this.wordInputField.value = wordObj.word || '';
+        }
+        if (this.panelActionBtn) {
+            this.panelActionBtn.textContent = 'Обновить';
+        }
+
+        this.setDirection(wordObj.direction, true); 
+        this.highlightWord(wordObj);
+        this.showInputPanel(wordObj.row, wordObj.col);
+    }
+
+    updateExistingWord(newWord, newDescription) {
+        if (!this.wordBeingEdited) {
+            return;
+        }
+
+        const target = this.wordBeingEdited;
+        const { row, col } = target;
+        const newDirection = this.direction;
+
+        if (!this.canPlaceWord(newWord, row, col, newDirection, target)) {
+            alert('Слово нельзя разместить в выбранной клетке и направлении');
+            return;
+        }
+
+        // обновляем данные слова в массиве
+        target.word = newWord;
+        target.description = newDescription;
+        target.direction = newDirection;
+
+        // перерисовываем сетку с учетом нового слова
+        this.rebuildGridFromWords();
+        this.updateGridDisplay();
+        this.clearInputs();
+        this.clearSelection();
+    }
+
+    exitEditMode() {
+        this.isEditMode = false;
+        this.wordBeingEdited = null;
     }
 } 
 
