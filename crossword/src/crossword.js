@@ -34,17 +34,24 @@ export class CrosswordGrid {
                 cell.dataset.row = i;
                 cell.dataset.col = j;
                 cell.textContent = this.grid[i][j] || '';
-                cell.addEventListener('click', () => {
-                    this.handleCellClick(i, j);
-                });
-                
                 gridContainer.appendChild(cell);
             }
         }
-
-        this.setupPlacementControls(clone);
         
-        return clone;
+        // поидее, 1 обработчик на всё
+        gridContainer.addEventListener('click', (event) => {
+            const cell = event.target;
+            
+            // проверка клика именно на сетку
+            if (cell.classList.contains('grid-cell')) {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                this.handleCellClick(row, col);
+            }
+        });
+        
+        this.setupPlacementControls(clone);
+        return clone; 
     }
 
     setupPlacementControls(container) {
